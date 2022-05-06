@@ -228,3 +228,22 @@ In the future, We can do regression analysis on the data. The dataset had a lot 
 5.	There are 2 Jupyter notebooks. You can use our code on your local machine as well as a notebook for AWS instance.
 6.	Read about the boto library for using AWS.
 7.	We created a separate python file for Streamlit.
+
+# Steps to run code
+1. To execute the notebook \
+Open Aws sagemaker \
+On the left tab go to notebook instances \
+Go to create notebook Instance \
+Add name on the instance  \
+Select a processor \
+Create new IAM role \
+Upload ipynb \
+Goto S3 create a bucket and upload the data files \
+Run the ipynb by clicking the play button. \
+ \
+2. Steps to execute streamlit .py file \
+Upload code to Jupyter dashboard on the local Instance \
+On the dashboard click on new \
+Open new Terminal \
+Run command \
+Streamlit run name.py
