@@ -11,6 +11,23 @@ This project is a part of the ITCS 6100 - Big Data Analytics for Competitive Adv
 # Communication plan
 We plan to communicate 3 times per week through zoom or in-person meetings based on the availability of the group members. The meetings will last for 2-3 hrs each.
 
+# Selection of data
+This dataset comprises movie ratings and has 1 lakh entries. This is prescribed by AWS \
+https://grouplens.org/datasets/movielens/
+
+# Business Problem or Opportunity, Domain Knowledge
+Business Problem/Opportunity - Recommendation algorithms are at the core of the Netflix, Prime and Hulu products. They provide our members with personalised
+suggestions to reduce the amount of time and frustration to find something great content to watch. \
+Link - https://research.netflix.com/research-area/recommendations
+
+Domain Knowledge - Recommender systems are Machine Learning techniques that serve the best advice for a potential buyer. They suggest the most relevant items to
+buy and, as a result, increase a company's revenue. These suggestions are based on users' behaviour and history that contain information on their past preferences.
+
+# Research Objectives and Question(s) 
+We plan to preprocess the data and design our own recommendation system, choosing our algorithm. We are trying to describe the taste in movies for an individual based on the previous observations we obtain a trend and predict a movie based on the data we have. For this, we will make use of ML Algorithms in AWS Sagemaker. By doing this we aim to answer the following questions: \
+What did the user like in the past ?(describe the user) \
+What will the user like in the future? (Prediction) 
+
 # Data Understanding
 The Data we have was divided in 4 different files. The link of the data we used is https://files.grouplens.org/datasets/movielens/ml-latest-small.zip
 The data is divided into links.csv, movies.csv, tags.csv and ratings.csv
@@ -125,3 +142,89 @@ Sources \
 https://grouplens.org/datasets/movielens/ \
 https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html \
 https://numpy.org/ 
+
+# Phase 3
+
+## Analytics, Machine Learning
+
+Here, We selected the KMeans Clustering algorithm. k-means clustering is a vector
+quantization method that seeks to partition n observations into k clusters, with each
+observation belonging to the cluster with the nearest mean (cluster centers or cluster
+centroid), which serves as the cluster's prototype. As a result, the data space is partitioned
+into Voronoi cells. Within-cluster variances (squared Euclidean distances) are minimized by
+k-means clustering, but regular Euclidean distances are not, which is the more difficult
+Weber problem: the mean optimizes squared errors, while only the geometric median
+reduces Euclidean distances. Using k-medians and k-medoids, for example, better
+Euclidean solutions can be obtained.
+
+We made use of the K-means clustering algorithm from sklearn python library.
+
+![image](https://user-images.githubusercontent.com/78280206/167052428-e56aa843-d706-4c89-b682-c2df43a4344d.png)
+
+### Analytics
+
+We also gave our code a front end to make the model interactive. We made use of Streamlit for this UI. 
+Streamlit is a python library making it easy to make our Machine Learning models interactive.
+Here, we plotted a few analytical graphs and also took the users input to make real-time recommendations.
+
+#### Average Ratings vs types of formats
+![image](https://user-images.githubusercontent.com/78280206/167052511-35cde9aa-2fcf-4c64-845a-ad65fb558df0.png)
+
+#### Number of Movies in the dataset with respect to genres
+![image](https://user-images.githubusercontent.com/78280206/167052876-935ba2d1-045c-492b-8f06-33eadce21dfe.png)
+
+## Evaluation and Optimization
+### Evaluation
+We broke the code into three portions to make recommendations.
+* Weighted Scores
+* Clustering
+* The Last Function
+
+To begin, we'll utilize a weighted rating system to assign a rating to each piece of data based on the average rating and number of votes. The following is the formula for calculating weighted rating:
+We use the Weighted rating formula for our analysis
+W=(v/(v+m) * M) + (m/(m+v) * C)
+Where:
+M = Mean for the video format
+v = number of votes for the video format
+m = minimum votes required to be counted
+C = the mean vote across the whole dataset
+
+### Optimization
+We need a boolean column for all the Genres for that we'll make a new column for each genre and assign a value of 1 or 0 to it based on the value.
+There will be a total of 38 columns created.
+We'll use a scaler to standardize the data in the all genres column.
+It converts the data so that the mean is 0 and the standard deviation is 1.
+In a nutshell, it normalizes the data. For data with negative values, standardization is beneficial.
+It uses a typical normal distribution to organize the data.
+![image](https://user-images.githubusercontent.com/78280206/167053215-4f23c076-ed7b-4019-9154-9dd5b98a2005.png)
+
+
+## Results
+* We make the famous elbow graph for our data and try to see which value of k is feasible for us. 
+* When we see the graph we see that we that after k=23 the values go down linearly. For further process, We will make use of K=23. Now we'll utilize the k-means cluster to forecast the clustering result. This will assist us in making genre-based recommendations.
+* We consider 5 parameters for our recommendation. At least one argument must be presented. A title is a movie/show name, a type is a video format, a rating is the minimum rating required, a year is a specific year search, and a genre is a genre name, and it will recommend up to 10 titles based on the arguments provided.
+![image](https://user-images.githubusercontent.com/78280206/167053300-c7eba80a-1e9c-4817-b442-e697209db4d1.png)
+![image](https://user-images.githubusercontent.com/78280206/167053305-0344d1c2-204b-4ba2-837b-d3fc38473415.png)
+
+## Future Work, Comments   
+The data we selected was not from Kaggle, but it was the official data from IMDb. The dataset was huge. The free instance of Sagemaker won’t process so much data. So we reduced the size of our data. The datasets were tab spaced versions and had a const id column, making it easy to merge 2 datasets and make a dataset we require.
+The dataset we merged had a single column of genres. As we wanted separate values. We added more columns to the dataset and each column represented a genre. The input in these columns was boolean to make it easier for us to process the data. We also removed some null values present in the dataset.
+As the dataset was otherwise clean, We didn’t have to deal with outliers of any kind.
+The imbd has some movies whose genre is not known. We cant categorize this data and we need further information on these movies to know the genre. We leave them as N for now. \
+Some important points.
+* Did you create any new additional features/variables?
+Yes, We created a few features for our genres.
+* What was the process you used for evaluation?  What was the best result?
+We used the K-means clustering algorithm till convergence and then we used the clusters for further recommendation analysis.
+* What were the problems you faced? How did you solve them?
+If this is a funded project then you can freely use the AWS resources. In college-level instances, you can't have a large dataset and you can’t build a pipeline. The data cant is kept in s3 because for every access you will call the S3 storage. This may incur charges on your account. The dataset we choose must have appropriate data. If not, the accuracy of the model declines. To develop a project like this you need to have knowledge of Machine Learning algorithms and AWS. We used a private account for our process and made which caused fewer problems. We selected the datasets which had appropriate data and were from a legitimate source. 
+* What future work would you like to do? 
+In the future, We can do regression analysis on the data. The dataset had a lot of movies without a genre. We will try to label the data there. We can also shift to graphical databases for processing unstructured data. Further enhancements are possible to give it a professional-looking UI.
+* Instructions for individuals that may want to use your work:-
+1.	Make sure you install all the necessary python libraries before working on the code.
+2.	Find a good dataset with enough rows and relevant columns.
+3.	While creating an S3 Bucket and a new notebook instance make sure to use a new IAM role and store data in a random s3 bucket.
+4.	Use a good processing instance for higher processing power.
+5.	There are 2 Jupyter notebooks. You can use our code on your local machine as well as a notebook for AWS instance.
+6.	Read about the boto library for using AWS.
+7.	We created a separate python file for Streamlit.
